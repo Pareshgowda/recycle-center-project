@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="text-center">Log Waste Data</h2>
+
+<!-- Waste data form in a table format -->
+<form method="POST">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Weight (lbs)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Landfill Waste</td>
+                <td><input type="text" class="form-control" name="landfill_waste" value="{{ record.landfill_waste if record else '' }}"></td>
+            </tr>
+            <tr>
+                <td>Food Waste</td>
+                <td><input type="text" class="form-control" name="food_waste" value="{{ record.food_waste if record else '' }}"></td>
+            </tr>
+            <tr>
+                <td>Aluminum</td>
+                <td><input type="text" class="form-control" name="aluminum" value="{{ record.aluminum if record else '' }}"></td>
+            </tr>
+            <tr>
+                <td>Cardboard</td>
+                <td><input type="text" class="form-control" name="cardboard" value="{{ record.cardboard if record else '' }}"></td>
+            </tr>
+            <tr>
+                <td>Glass</td>
+                <td><input type="text" class="form-control" name="glass" value="{{ record.glass if record else '' }}"></td>
+            </tr>
+            <tr>
+                <td>Metal Cans</td>
+                <td><input type="text" class="form-control" name="metal_cans" value="{{ record.metal_cans if record else '' }}"></td>
+            </tr>
+            <tr>
+                <td>Metal Scrap</td>
+                <td><input type="text" class="form-control" name="metal_scrap" value="{{ record.metal_scrap if record else '' }}"></td>
+            </tr>
+            <tr>
+                <td>Paper Books</td>
+                <td><input type="text" class="form-control" name="paper_books" value="{{ record.paper_books if record else '' }}"></td>
+            </tr>
+            <tr>
+                <td>Paper Mixed</td>
+                <td><input type="text" class="form-control" name="paper_mixed" value="{{ record.paper_mixed if record else '' }}"></td>
+            </tr>
+            <tr>
+                <td>Paper Newspaper</td>
+                <td><input type="text" class="form-control" name="paper_newspaper" value="{{ record.paper_newspaper if record else '' }}"></td>
+            </tr>
+            <tr>
+                <td>Paper White</td>
+                <td><input type="text" class="form-control" name="paper_white" value="{{ record.paper_white if record else '' }}"></td>
+            </tr>
+            <tr>
+                <td>Plastic PET</td>
+                <td><input type="text" class="form-control" name="plastic_pet" value="{{ record.plastic_pet if record else '' }}"></td>
+            </tr>
+            <tr>
+                <td>Plastic HDPE Colored</td>
+                <td><input type="text" class="form-control" name="plastic_hdpe_colored" value="{{ record.plastic_hdpe_colored if record else '' }}"></td>
+            </tr>
+            <tr>
+                <td>Plastic HDPE Natural</td>
+                <td><input type="text" class="form-control" name="plastic_hdpe_natural" value="{{ record.plastic_hdpe_natural if record else '' }}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Log Waste</button>
+</form>
+
+<!-- Section for viewing data datewise -->
+<h3 class="mt-4">View Data by Date</h3>
+<form method="GET" action="/view-data">
+    <div class="mb-3">
+        <label for="date_view" class="form-label">Select Date</label>
+        <input type="date" class="form-control" id="date_view" name="date_view" required>
+    </div>
+    <button type="submit" class="btn btn-secondary">View Data</button>
+</form>
+
+{% if viewed_data %}
+<h3 class="mt-4">Data for {{ viewed_date }}</h3>
+<ul>
+    <li>Landfill Waste: {{ viewed_data.landfill_waste }} lbs</li>
+    <li>Food Waste: {{ viewed_data.food_waste }} lbs</li>
+    <li>Aluminum: {{ viewed_data.aluminum }} lbs</li>
+    <li>Cardboard: {{ viewed_data.cardboard }} lbs</li>
+    <li>Glass: {{ viewed_data.glass }} lbs</li>
+    <li>Metal Cans: {{ viewed_data.metal_cans }} lbs</li>
+    <li>Metal Scrap: {{ viewed_data.metal_scrap }} lbs</li>
+    <li>Paper Books: {{ viewed_data.paper_books }} lbs</li>
+    <li>Paper Mixed: {{ viewed_data.paper_mixed }} lbs</li>
+    <li>Paper Newspaper: {{ viewed_data.paper_newspaper }} lbs</li>
+    <li>Paper White: {{ viewed_data.paper_white }} lbs</li>
+    <li>Plastic PET: {{ viewed_data.plastic_pet }} lbs</li>
+    <li>Plastic HDPE Colored: {{ viewed_data.plastic_hdpe_colored }} lbs</li>
+    <li>Plastic HDPE Natural: {{ viewed_data.plastic_hdpe_natural }} lbs</li>
+</ul>
+{% endif %}
+{% endblock %}
