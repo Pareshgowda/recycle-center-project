@@ -1,22 +1,21 @@
-from sqlalchemy import create_engine, Column, Integer, String, Float, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Text
+from sqlalchemy.dialects.sqlite import JSON
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from datetime import datetime
 
-# Define the base for the models
 Base = declarative_base()
 
-# User model
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
-    username = Column(String, unique=True, nullable=False)
+    username = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
     role = Column(String, nullable=False)
 
-# WasteRecord model
 class WasteRecord(Base):
     __tablename__ = 'waste_records_new'
     id = Column(Integer, primary_key=True)
+
     date_collected = Column(Date, nullable=False)
     food_compost = Column(Float)
     food_noncompost = Column(Float)
@@ -58,3 +57,13 @@ Base.metadata.create_all(engine)
 # Create the session for interacting with the database
 Session = sessionmaker(bind=engine)
 session = Session()
+
+    user_id = Column(Integer)
+    date_collected = Column(DateTime, default=datetime.now)
+    data = Column(JSON)  # Store waste data as JSON
+
+class Category(Base):
+    __tablename__ = 'categories'
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False, unique=True)
+
