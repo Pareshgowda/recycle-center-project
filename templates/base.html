@@ -22,9 +22,15 @@
                         <a class="nav-link" href="/dashboard">Dashboard</a>
                     </li>
                     {% if session['role'] == 'admin' %}
+
+                    <!--<li class="nav-item">
+                        <a class="nav-link" href="/add-category">Add Category</a>
+                    </li>-->
+
                     <li class="nav-item">
                         <a class="nav-link" href="/manage-categories">Manage Categories</a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link" href="/manage-users">Manage Users</a>
                     </li>
