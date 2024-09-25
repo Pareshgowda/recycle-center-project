@@ -1,106 +1,172 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 class="text-center">Log Waste Data</h2>
-
-<!-- Waste data form in a table format -->
-<form method="POST">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Category</th>
-                <th>Weight (lbs)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Landfill Waste</td>
-                <td><input type="text" class="form-control" name="landfill_waste" value="{{ record.landfill_waste if record else '' }}"></td>
-            </tr>
-            <tr>
-                <td>Food Waste</td>
-                <td><input type="text" class="form-control" name="food_waste" value="{{ record.food_waste if record else '' }}"></td>
-            </tr>
-            <tr>
-                <td>Aluminum</td>
-                <td><input type="text" class="form-control" name="aluminum" value="{{ record.aluminum if record else '' }}"></td>
-            </tr>
-            <tr>
-                <td>Cardboard</td>
-                <td><input type="text" class="form-control" name="cardboard" value="{{ record.cardboard if record else '' }}"></td>
-            </tr>
-            <tr>
-                <td>Glass</td>
-                <td><input type="text" class="form-control" name="glass" value="{{ record.glass if record else '' }}"></td>
-            </tr>
-            <tr>
-                <td>Metal Cans</td>
-                <td><input type="text" class="form-control" name="metal_cans" value="{{ record.metal_cans if record else '' }}"></td>
-            </tr>
-            <tr>
-                <td>Metal Scrap</td>
-                <td><input type="text" class="form-control" name="metal_scrap" value="{{ record.metal_scrap if record else '' }}"></td>
-            </tr>
-            <tr>
-                <td>Paper Books</td>
-                <td><input type="text" class="form-control" name="paper_books" value="{{ record.paper_books if record else '' }}"></td>
-            </tr>
-            <tr>
-                <td>Paper Mixed</td>
-                <td><input type="text" class="form-control" name="paper_mixed" value="{{ record.paper_mixed if record else '' }}"></td>
-            </tr>
-            <tr>
-                <td>Paper Newspaper</td>
-                <td><input type="text" class="form-control" name="paper_newspaper" value="{{ record.paper_newspaper if record else '' }}"></td>
-            </tr>
-            <tr>
-                <td>Paper White</td>
-                <td><input type="text" class="form-control" name="paper_white" value="{{ record.paper_white if record else '' }}"></td>
-            </tr>
-            <tr>
-                <td>Plastic PET</td>
-                <td><input type="text" class="form-control" name="plastic_pet" value="{{ record.plastic_pet if record else '' }}"></td>
-            </tr>
-            <tr>
-                <td>Plastic HDPE Colored</td>
-                <td><input type="text" class="form-control" name="plastic_hdpe_colored" value="{{ record.plastic_hdpe_colored if record else '' }}"></td>
-            </tr>
-            <tr>
-                <td>Plastic HDPE Natural</td>
-                <td><input type="text" class="form-control" name="plastic_hdpe_natural" value="{{ record.plastic_hdpe_natural if record else '' }}"></td>
-            </tr>
-        </tbody>
-    </table>
-    <button type="submit" class="btn btn-primary">Log Waste</button>
-</form>
-
-<!-- Section for viewing data datewise -->
-<h3 class="mt-4">View Data by Date</h3>
-<form method="GET" action="/view-data">
-    <div class="mb-3">
-        <label for="date_view" class="form-label">Select Date</label>
-        <input type="date" class="form-control" id="date_view" name="date_view" required>
+<div class="container">
+    <h2 class="text-center mb-4">View Data by Date</h2>
+    <form method="GET" action="/log-waste" class="mb-4">
+        <div class="mb-3">
+            <label for="date_view" class="form-label">Select Date</label>
+            <input type="date" class="form-control" id="date_view" name="date_view" value="{{ request.args.get('date_view', '') or selected_date }}" required>
+        </div>
+        <button type="submit" class="btn btn-secondary">View Data</button>
+    </form>
+    {% if show_form %}
+    <h2 class="mt-4 mb-3" style="font-size: 1.5rem;">Log Waste Data for {{ selected_date }}</h2>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-success">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
     </div>
-    <button type="submit" class="btn btn-secondary">View Data</button>
-</form>
+    {% endif %}
+    {% endwith %}
+    <form method="POST" action="/log-waste">
+        <input type="hidden" name="selected_date" value="{{ selected_date }}">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Category</th>
+                        <th>Subcategory</th>
+                        <th>Weight (lbs)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                     <!-- Original fields -->
+                     <tr>
+                        <td rowspan="2">Food</td>
+                        <td>Compost</td>
+                        <td><input type="text" class="form-control" name="food_compost" value="{{ record.food_compost if record else '' }}"></td>
+                     </tr>
+                     <tr>
+                        <td>NonCompost</td>
+                        <td><input type="text" class="form-control" name="food_noncompost" value="{{ record.food_noncompost if record else '' }}"></td>
+                     </tr>
+                     <tr>
+                        <td rowspan="4">Cardboard & Paper</td>
+                        <td>Cardboard</td>
+                        <td><input type="text" class="form-control" name="cardboard" value="{{ record.cardboard if record else '' }}"></td>
+                     </tr>
+                     <tr>
+                        <td>Mixed</td>
+                        <td><input type="text" class="form-control" name="paper_mixed" value="{{ record.paper_mixed if record else '' }}"></td>
+                     </tr>
+                     <tr>
+                        <td>Newsprint</td>
+                        <td><input type="text" class="form-control" name="paper_newspaper" value="{{ record.paper_newspaper if record else '' }}"></td>
+                     </tr>
+                     <tr>
+                        <td>White</td>
+                        <td><input type="text" class="form-control" name="paper_white" value="{{ record.paper_white if record else '' }}"></td>
+                     </tr>
+                     <tr>
+                        <td rowspan="3">Plastic</td>
+                        <td>#1 PET</td>
+                        <td><input type="text" class="form-control" name="plastic_pet" value="{{ record.plastic_pet if record else '' }}"></td>
+                     </tr>
+                     <tr>
+                        <td>#2 Natural</td>
+                        <td><input type="text" class="form-control" name="plastic_natural" value="{{ record.plastic_natural if record else '' }}"></td>
+                     </tr>
+                     <tr>
+                        <td>#2 Color</td>
+                        <td><input type="text" class="form-control" name="plastic_colored" value="{{ record.plastic_colored if record else '' }}"></td>
+                     </tr>
+                     <tr>
+                        <td rowspan="2">Metal</td>
+                        <td>Aluminum</td>
+                        <td><input type="text" class="form-control" name="aluminum" value="{{ record.aluminum if record else '' }}"></td>
+                     </tr>
+                     <tr>
+                        <td>Other</td>
+                        <td><input type="text" class="form-control" name="metal_other" value="{{ record.metal_other if record else '' }}"></td>
+                     </tr>
+                     <tr>
+                        <td>Glass</td>
+                        <td>Glass</td>
+                        <td><input type="text" class="form-control" name="glass" value="{{ record.glass if record else '' }}"></td>
+                     </tr>
+                     <!-- Dynamic fields for new categories -->
+                     {% for category in categories %}
+                     {% if category.name not in ['Food', 'Cardboard & Paper', 'Plastic', 'Metal', 'Glass'] %}
+                     {% for subcategory in category.children %}
+                     <tr>
+                        {% if loop.first %}
+                        <td rowspan="{{ category.children|length }}">{{ category.name }}</td>
+                        {% endif %}
+                        <td>{{ subcategory.name }}</td>
+                        <td>
+                           {% set field_name = (category.name|lower + '_' + subcategory.name|lower)|replace(' ', '_') %}
+                           <input type="text" class="form-control" name="{{ field_name }}" 
+                              value="{{ record|get_attribute(field_name) if record else '' }}">
+                        </td>
+                     </tr>
+                     {% endfor %}
+                     {% endif %}
+                     {% endfor %}
+                  </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-start mt-3">
+            <button type="submit" class="btn btn-primary me-2">Log Waste</button>
+            <a href="{{ url_for('add_category') }}" class="btn btn-secondary me-2">Add New Category</a>
+            <a href="{{ url_for('delete_category') }}" class="btn btn-danger">Delete Category</a>
+        </div>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
 
-{% if viewed_data %}
-<h3 class="mt-4">Data for {{ viewed_date }}</h3>
-<ul>
-    <li>Landfill Waste: {{ viewed_data.landfill_waste }} lbs</li>
-    <li>Food Waste: {{ viewed_data.food_waste }} lbs</li>
-    <li>Aluminum: {{ viewed_data.aluminum }} lbs</li>
-    <li>Cardboard: {{ viewed_data.cardboard }} lbs</li>
-    <li>Glass: {{ viewed_data.glass }} lbs</li>
-    <li>Metal Cans: {{ viewed_data.metal_cans }} lbs</li>
-    <li>Metal Scrap: {{ viewed_data.metal_scrap }} lbs</li>
-    <li>Paper Books: {{ viewed_data.paper_books }} lbs</li>
-    <li>Paper Mixed: {{ viewed_data.paper_mixed }} lbs</li>
-    <li>Paper Newspaper: {{ viewed_data.paper_newspaper }} lbs</li>
-    <li>Paper White: {{ viewed_data.paper_white }} lbs</li>
-    <li>Plastic PET: {{ viewed_data.plastic_pet }} lbs</li>
-    <li>Plastic HDPE Colored: {{ viewed_data.plastic_hdpe_colored }} lbs</li>
-    <li>Plastic HDPE Natural: {{ viewed_data.plastic_hdpe_natural }} lbs</li>
-</ul>
-{% endif %}
+{% block extra_styles %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+    }
+    .container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        color: #000000;
+        font-weight: bold; 
+        margin-bottom: 0.5rem;
+    }
+    .form-label {
+        color: #000000;
+        font-weight: 600;
+    }
+    .table {
+        background-color: #ffffff;
+    }
+    .table th {
+        background-color: #f1f3f5;
+        font-weight: 600;
+    }
+    .form-control {
+        border-radius: 5px;
+    }
+    .btn {
+        border-radius: 5px;
+        font-weight: 500;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+</style>
 {% endblock %}

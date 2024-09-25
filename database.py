@@ -15,36 +15,39 @@ class User(Base):
 
 # WasteRecord model
 class WasteRecord(Base):
-    __tablename__ = 'waste_records'
+    __tablename__ = 'waste_records_new'
     id = Column(Integer, primary_key=True)
     date_collected = Column(Date, nullable=False)
-    landfill_waste = Column(Float)
-    food_waste = Column(Float)
-    aluminum = Column(Float)
+    food_compost = Column(Float)
+    food_noncompost = Column(Float)
     cardboard = Column(Float)
-    glass = Column(Float)
-    metal_cans = Column(Float)
-    metal_scrap = Column(Float)
-    paper_books = Column(Float)
     paper_mixed = Column(Float)
     paper_newspaper = Column(Float)
     paper_white = Column(Float)
     plastic_pet = Column(Float)
-    plastic_hdpe_colored = Column(Float)
-    plastic_hdpe_natural = Column(Float)
+    plastic_natural = Column(Float)
+    plastic_colored = Column(Float)
+    aluminum = Column(Float)
+    metal_other = Column(Float)
+    glass = Column(Float)
     user_id = Column(Integer, ForeignKey('users.id'))
 
     # Relationship to the User model
-    user = relationship("User", back_populates="waste_records")
+    user = relationship("User", back_populates="waste_records_new")
 
 # Category model
 class Category(Base):
     __tablename__ = 'categories'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
+    parent_id = Column(Integer, ForeignKey('categories.id'))
+    
+    # Relationship to parent and children
+    parent = relationship("Category", back_populates="children", remote_side=[id])
+    children = relationship("Category", back_populates="parent")
 
 # Define the relationship between User and WasteRecord
-User.waste_records = relationship("WasteRecord", order_by=WasteRecord.id, back_populates="user")
+User.waste_records_new = relationship("WasteRecord", order_by=WasteRecord.id, back_populates="user")
 
 # Create the database engine
 engine = create_engine('sqlite:///recycle_center.db')
